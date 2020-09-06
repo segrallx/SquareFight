@@ -12,7 +12,7 @@ public class OrcArcher : Orc
     };
 
     public CrossAttack mTooth;
-    //    private bool mAttacking = false;
+	public bool mAttacking = false;
     private int mAttackRound = -1; // 上一次攻击的回合
 
     // Start is called before the first frame update
@@ -20,30 +20,48 @@ public class OrcArcher : Orc
     {
     }
 
+	void initAnimator()
+	{
+		var animator = GetComponent<Animator>();
+		for (int i = 0; i < animator.runtimeAnimatorController.animationClips.Length; i++)
+		{
+			var animation = animator.runtimeAnimatorController.animationClips[i];
+			AnimationEvent evt = new AnimationEvent();
+			evt.time = 1f * animation.length;
+			evt.functionName = "animationOver";
+			evt.stringParameter = animation.name;
+			animation.AddEvent(evt);
+		}
+		Debug.LogFormat("add animation event");
+	}
+
+	void initAnimation()
+	{
+		var animation = GetComponent<Animation>();
+		AnimationEvent evt = new AnimationEvent();
+		evt.time = 1f * animation.clip.length;
+		evt.functionName = "animationOver";
+		evt.stringParameter = animation.name;
+		animation.clip.AddEvent(evt);
+		animation.Play();
+		Debug.LogFormat("add animation event");
+	}
+
 
     // Start is called before the first frame update
     void Awake()
     {
-        if (mi == 0)
+		if (mi == 0)
         {
-            var animator = GetComponent<Animator>();
-            for (int i = 0; i < animator.runtimeAnimatorController.animationClips.Length; i++)
-            {
-                var animation = animator.runtimeAnimatorController.animationClips[i];
-                AnimationEvent evt = new AnimationEvent();
-                evt.time = 0.9f * animation.length;
-                evt.functionName = "animationOver";
-                evt.stringParameter = animation.name;
-                animation.AddEvent(evt);
-            }
-            Debug.LogFormat("add animation event");
+			//initAnimator();
+			initAnimation();
             mi = 1;
         }
     }
 
     void animationOver(string name)
     {
-        //Debug.LogFormat("animation over {0}", name);
+        Debug.LogFormat("animation over {0}", name);
         tryAction();
     }
 
@@ -89,10 +107,10 @@ public class OrcArcher : Orc
 
     void tryAction()
     {
-        // if (mAttacking)
-        // {
-        //     return;
-        // }
+        if (mAttacking)
+        {
+            return;
+        }
 
         //Debug.LogFormat("try action");
         if (hasAttackRound() && tryAttack())
@@ -169,12 +187,12 @@ public class OrcArcher : Orc
 
     void doIdle()
     {
-        mState = State.Idle;
+        //mState = State.Idle;
     }
 
     void doMove()
     {
-        mState = State.Move;
+        //mState = State.Move;
     }
 
 
@@ -198,8 +216,6 @@ public class OrcArcher : Orc
         }
 
         mTooth.DoAttack(dir);
-        // mAttacking = true;
-        mState = State.Attack;
 
         return match;
     }
@@ -221,8 +237,14 @@ public class OrcArcher : Orc
 
     void afterAttack()
     {
-        // mAttacking = false;
-        tryAction();
+		Debug.LogFormat("archer afterAttack ");
+		mAttacking = false;
+    }
+
+	void beforeAttack()
+    {
+		Debug.LogFormat("archer beforeAttack ");
+        mAttacking = true;
     }
 
 }

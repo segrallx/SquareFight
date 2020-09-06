@@ -12,7 +12,7 @@ public class OrcSilly : Orc
     };
 
     public CrossAttack mTooth;
-    //private bool mAttacking = false;
+    public bool mAttacking = false;
     private int mAttackRound = -1; // 上一次攻击的回合
 
     // Start is called before the first frame update
@@ -20,23 +20,43 @@ public class OrcSilly : Orc
     {
     }
 
+	void initAnimator()
+	{
+		var animator = GetComponent<Animator>();
+		for (int i = 0; i < animator.runtimeAnimatorController.animationClips.Length; i++)
+		{
+			var animation = animator.runtimeAnimatorController.animationClips[i];
+			AnimationEvent evt = new AnimationEvent();
+			evt.time = 1f * animation.length;
+			evt.functionName = "animationOver";
+			evt.stringParameter = animation.name;
+			animation.AddEvent(evt);
+		}
+		Debug.LogFormat("add animation event");
+	}
+
+
+	void initAnimation()
+	{
+		var animation = GetComponent<Animation>();
+		AnimationEvent evt = new AnimationEvent();
+		evt.time = 1f * animation.clip.length;
+		evt.functionName = "animationOver";
+		evt.stringParameter = animation.name;
+		animation.clip.AddEvent(evt);
+		animation.Play();
+		Debug.LogFormat("add animation event");
+	}
+
+
 
     // Start is called before the first frame update
     void Awake()
     {
         if (mi == 0)
         {
-            var animator = GetComponent<Animator>();
-            for (int i = 0; i < animator.runtimeAnimatorController.animationClips.Length; i++)
-            {
-                var animation = animator.runtimeAnimatorController.animationClips[i];
-                AnimationEvent evt = new AnimationEvent();
-                evt.time = 0.9f * animation.length;
-                evt.functionName = "animationOver";
-                evt.stringParameter = animation.name;
-                animation.AddEvent(evt);
-            }
-            Debug.LogFormat("add animation event");
+			//initAnimator();
+			initAnimation();
             mi = 1;
         }
     }
@@ -89,10 +109,10 @@ public class OrcSilly : Orc
 
     void tryAction()
     {
-        // if (mAttacking)
-        // {
-        //     return;
-        // }
+		if (mAttacking)
+        {
+            return;
+        }
 
         //Debug.LogFormat("try action");
         if (hasAttackRound() && tryAttack())
@@ -169,12 +189,12 @@ public class OrcSilly : Orc
 
     void doIdle()
     {
-        mState = State.Idle;
+        //mState = State.Idle;
     }
 
     void doMove()
     {
-        mState = State.Move;
+        //mState = State.Move;
     }
 
 
@@ -198,8 +218,8 @@ public class OrcSilly : Orc
         }
 
         mTooth.DoAttack(dir);
-        //mAttacking = true;
-        mState = State.Attack;
+        //mState = State.Attack;
+
 
         return match;
     }
@@ -221,8 +241,14 @@ public class OrcSilly : Orc
 
     void afterAttack()
     {
-        //mAttacking = false;
-        tryAction();
+		Debug.LogFormat("silly afterAttack ");
+        mAttacking = false;
+    }
+
+
+    void beforeAttack()
+    {
+        mAttacking = true;
     }
 
 

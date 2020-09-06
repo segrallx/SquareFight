@@ -18,7 +18,8 @@ public class CrossAttack : MonoBehaviour
     public void DoAttack(int dir)
     {
         transform.rotation = Direction.Rotation(dir);
-        mWeapon.GetComponent<Animation>().Play();
+		Debug.LogFormat("cross atack");
+		mWeapon.GetComponent<CrossWeapon>().playAttack();
     }
 
     public void CancelAttack()
@@ -30,6 +31,11 @@ public class CrossAttack : MonoBehaviour
     public void afterAttack()
     {
 		mOwer.SendMessage("afterAttack");
+    }
+
+	public void beforeAttack()
+    {
+		mOwer.SendMessage("beforeAttack");
     }
 
 }

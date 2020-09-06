@@ -12,8 +12,8 @@ public class Floors : MonoBehaviour
 
     public const float FloorSize = 1f;
 
-    private const int xsize = 6;
-    private const int ysize = 4;
+    private const int xsize = 8;
+    private const int ysize = 5;
 
     public static int XSizeMax = xsize - 1;
     public static int XSizeMin = -xsize;
@@ -23,8 +23,10 @@ public class Floors : MonoBehaviour
 
     public GameObject mFloor001;
 
-    private static FloorState[,] mFloorState = new FloorState[XSizeMax - XSizeMin + 1, YSizeMax - YSizeMin + 1];
-	private static Floor[,] mFloorObj = new Floor[XSizeMax - XSizeMin + 1, YSizeMax - YSizeMin + 1];
+    private static FloorState[,] mFloorState =
+		new FloorState[XSizeMax - XSizeMin + 1, YSizeMax - YSizeMin + 1];
+	private static Floor[,] mFloorObj =
+		new Floor[XSizeMax - XSizeMin + 1, YSizeMax - YSizeMin + 1];
     private static List<Vector2Int> mFreeFloorList = new List<Vector2Int>();
 
 
@@ -121,6 +123,7 @@ public class Floors : MonoBehaviour
     }
 
 
+	// 初始化地图.
     void initMap()
     {
 		var hero = Hero.Instance();
@@ -147,9 +150,11 @@ public class Floors : MonoBehaviour
                 }
             }
         }
+
 		hero.ExploreCrossPos();
     }
 
+	// 检查是否还有空位
     public bool HasFreePos()
     {
         return mFreeFloorList.Count > 0;
@@ -167,5 +172,6 @@ public class Floors : MonoBehaviour
 		GetFloorObj(ret.x, ret.y).SetUsed();
         return ret;
     }
+
 
 }

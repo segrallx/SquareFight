@@ -1,0 +1,50 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "t1.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "BaseMap.tsx": {
+            "scaleInDock": 0.33,
+            "scaleInEditor": 1
+        },
+        "TildMaps/t1.tmx": {
+            "scale": 2.7296875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 272.192329708071,
+                "y": 160.27475672581568
+            }
+        },
+        "t1.tmx": {
+            "scale": 0.25,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2372,
+                "y": 1534
+            }
+        }
+    },
+    "map.height": 10,
+    "map.lastUsedFormat": "tmx",
+    "map.width": 18,
+    "openFiles": [
+        "t1.tmx",
+        "BaseMap.tsx"
+    ],
+    "project": "TiledMaps.tiled-project",
+    "recentFiles": [
+        "BaseMap.tsx",
+        "t1.tmx",
+        "TildMaps/t1.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 256,
+        "width": 256
+    }
+}

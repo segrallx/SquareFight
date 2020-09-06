@@ -14,7 +14,7 @@ public class OrcSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (mOrcCnt >= 5)
+        if (mOrcCnt >= 10)
         {
             return;
         }
@@ -41,7 +41,8 @@ public class OrcSpawner : MonoBehaviour
         var posInt = Floors.Instance().PopRandomFreePos(Floors.FloorState.Orc);
         Debug.LogFormat("spawn pos {0}", posInt);
         var posFloat = new Vector3(posInt.x * Floors.FloorSize, posInt.y * Floors.FloorSize);
-        var mOrc = mOrcs[idx % mOrcs.Length];
+        //var mOrc = mOrcs[idx % mOrcs.Length];
+		var mOrc = mOrcs[1];
         var obj = Instantiate(mOrc, posFloat, Quaternion.identity, transform);
         obj.GetComponent<Orc>().SetPos(posInt.x, posInt.y);
 		Floors.Instance().GetFloorObj(posInt.x, posInt.y).mNpc = obj;

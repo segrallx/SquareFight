@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7350817856952463955}
   - component: {fileID: 2081118843088802653}
-  - component: {fileID: 1283918237384621810}
   - component: {fileID: 6689357981558023711}
   - component: {fileID: 1250768370815166933}
+  - component: {fileID: 8246039382448090395}
   m_Layer: 0
   m_Name: OrcArcher
   m_TagString: Untagged
@@ -49,8 +49,6 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -86,25 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &1283918237384621810
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 77258527680534557}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6af9b4e20b0a3496f99ca3e1409407be, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!61 &6689357981558023711
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -147,6 +126,22 @@ MonoBehaviour:
   mY: 0
   mPosChange: 0
   mTooth: {fileID: 5107090245429923841}
+--- !u!111 &8246039382448090395
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 77258527680534557}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: f4a7019af22e643d894f1e98d1ceb297, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: f4a7019af22e643d894f1e98d1ceb297, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &973765229580374258
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,8 +190,6 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
