@@ -79,7 +79,7 @@ public class FtLevelEditor : EditorWindow
                                                          levelSelectIdx,
                                                          levelListName,
                                                          levelListIdx,
-                                                         GUILayout.Width(450)
+                                                         GUILayout.Width(300)
                                                   );
         if (newLevelSelectIdx != levelSelectIdx)
         {
@@ -116,9 +116,40 @@ public class FtLevelEditor : EditorWindow
         }
     }
 
-	// 从文件中加载关卡数据.
+    // 测试读取tilemap信息.
+    void gridShowTest()
+    {
+        var grid = GameObject.Find("Grid");
+        for (var tileMapIdx = 0;  tileMapIdx < grid.transform.childCount;tileMapIdx++)
+        {
+            var child = grid.transform.GetChild(tileMapIdx);
+            var tilemap = child.GetComponent<Tilemap>();
+			var area = tilemap.cellBounds;
+			var tileArray = tilemap.GetTilesBlock(area);
+
+			for (int i = area.xMin; i < area.xMax; i++)
+			{
+				for (int j = area.yMin; j < area.yMax; j++)
+				{
+					if (tilemap.GetTile(new Vector3Int(i, j, 0)) == null)
+					{
+						continue;
+					}
+
+					Debug.LogFormat(tilemap.GetTile(new Vector3Int(i, j, 0)).ToString());
+					// Vector3Int temp = new Vector3Int(i, j, 0);
+					// data.Add(i + "," + j, tilemap.GetTile(temp).name);
+					// tilecount++;
+				}
+			}
+
+        }
+    }
+
+    // 从文件中加载关卡数据.
     void loadLevelByData()
     {
+		gridShowTest();
         string data = "";
         if (!FtLevelData.GetLevelData(levelSelectIdx, ref data))
         {
@@ -126,7 +157,7 @@ public class FtLevelEditor : EditorWindow
             return;
         }
 
-		FtDLevel ftDLevel = JsonUtility.FromJson<FtDLevel>(data);
+        FtDLevel ftDLevel = JsonUtility.FromJson<FtDLevel>(data);
 
         Debug.LogFormat("loadLevelByData");
         var grid = GameObject.Find("Grid");
@@ -160,16 +191,16 @@ public class FtLevelEditor : EditorWindow
     }
 
 
-	// 将关卡数据序列化保存到文件中.
-	void saveLevelByData()
+    // 将关卡数据序列化保存到文件中.
+    void saveLevelByData()
     {
-		FtDLevel ftDLevel = new FtDLevel();
-		var grid = GameObject.Find("Grid");
-		//grid.transform
+        FtDLevel ftDLevel = new FtDLevel();
+        var grid = GameObject.Find("Grid");
+        //grid.transform
 
-		string data = JsonUtility.ToJson(ftDLevel);
-		FtLevelData.SetLevelData(levelSelectIdx, data);
-	}
+        string data = JsonUtility.ToJson(ftDLevel);
+        FtLevelData.SetLevelData(levelSelectIdx, data);
+    }
 
     #endregion
 

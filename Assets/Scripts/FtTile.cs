@@ -16,4 +16,11 @@ public class FtTile : Tile
 
 	public Type mType;
 
+	public override string ToString()
+	{
+		return "tst";
+	}
+
+
+
 }

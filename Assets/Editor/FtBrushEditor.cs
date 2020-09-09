@@ -16,7 +16,8 @@ using UnityEditor;
 			//EditorGUILayout.LabelField(XMConst.CopyRight);
 		}
 
-		public override void OnPaintSceneGUI(GridLayout grid, GameObject brushTarget, BoundsInt position, GridBrushBase.Tool tool, bool executing)
+		public override void OnPaintSceneGUI(GridLayout grid, GameObject brushTarget,
+											 BoundsInt position, GridBrushBase.Tool tool, bool executing)
 		{
 			base.OnPaintSceneGUI(grid, brushTarget, position, tool, executing);
 			Handles.Label(grid.CellToWorld(new Vector3Int(position.x, position.y, position.z)),
