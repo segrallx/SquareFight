@@ -3,7 +3,7 @@
 
 
 [CustomEditor(typeof(FtTile))]
-public class FtTileInspector :Editor
+public class FtTileEditor :Editor
 {
 	FtTile tile;
     bool showWeapons;
