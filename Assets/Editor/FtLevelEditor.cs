@@ -3,12 +3,11 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-
 public class FtLevelEditor : EditorWindow
 {
     public int toolbarOption = 0;
     public string[] toolbarTexts = { "关 卡", "属 性" };
-    private int levelSelectIdx = 0;
+    private int levelSelectIdx = -1;
 
     // 当前操作的关卡数据
     //private FtDLevel ftDLevel;
@@ -67,6 +66,10 @@ public class FtLevelEditor : EditorWindow
         // }
     }
 
+	void refreshLevelList()
+	{
+	}
+
     void guiLevelPopUp()
     {
         GUILayout.Space(10);
@@ -81,26 +84,44 @@ public class FtLevelEditor : EditorWindow
                                                          levelListIdx,
                                                          GUILayout.Width(300)
                                                   );
+
         if (newLevelSelectIdx != levelSelectIdx)
         {
+            Debug.LogFormat("select index {0}", newLevelSelectIdx);
+            saveLevelByData();
             levelSelectIdx = newLevelSelectIdx;
             loadTileFromAssert();
-            clearCurrentLevel();
             loadLevelByData();
         }
 
+		GUILayout.EndVertical();
 
-        GUILayout.EndVertical();
+		GUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("Save", GUILayout.Width(80)))
+        {
+            saveLevelByData();
+        }
+
+		if (GUILayout.Button("Refresh", GUILayout.Width(80)))
+        {
+			FtLevelData.SetDirty();
+			loadTileFromAssert();
+			loadLevelByData();
+        }
+
+		GUILayout.EndHorizontal();
     }
 
-    void clearCurrentLevel()
-    {
-        Debug.LogFormat("clear current level");
-    }
+    // void clearCurrentLevel()
+    // {
+    //     Debug.LogFormat("clear current level");
+    // }
 
     void loadTileFromAssert()
     {
         string[] list = {
+            "FtNone.asset",
             "FtFloor.asset",
             "FtHero.asset",
             "FtOrcArcher.asset",
@@ -119,37 +140,18 @@ public class FtLevelEditor : EditorWindow
     // 测试读取tilemap信息.
     void gridShowTest()
     {
-        var grid = GameObject.Find("Grid");
-        for (var tileMapIdx = 0;  tileMapIdx < grid.transform.childCount;tileMapIdx++)
-        {
-            var child = grid.transform.GetChild(tileMapIdx);
-            var tilemap = child.GetComponent<Tilemap>();
-			var area = tilemap.cellBounds;
-			var tileArray = tilemap.GetTilesBlock(area);
 
-			for (int i = area.xMin; i < area.xMax; i++)
-			{
-				for (int j = area.yMin; j < area.yMax; j++)
-				{
-					if (tilemap.GetTile(new Vector3Int(i, j, 0)) == null)
-					{
-						continue;
-					}
-
-					Debug.LogFormat(tilemap.GetTile(new Vector3Int(i, j, 0)).ToString());
-					// Vector3Int temp = new Vector3Int(i, j, 0);
-					// data.Add(i + "," + j, tilemap.GetTile(temp).name);
-					// tilecount++;
-				}
-			}
-
-        }
     }
 
     // 从文件中加载关卡数据.
     void loadLevelByData()
     {
-		gridShowTest();
+        //gridShowTest();
+        if (levelSelectIdx < 0)
+        {
+            return;
+        }
+
         string data = "";
         if (!FtLevelData.GetLevelData(levelSelectIdx, ref data))
         {
@@ -158,8 +160,6 @@ public class FtLevelEditor : EditorWindow
         }
 
         FtDLevel ftDLevel = JsonUtility.FromJson<FtDLevel>(data);
-
-        Debug.LogFormat("loadLevelByData");
         var grid = GameObject.Find("Grid");
         if (grid != null)
         {
@@ -170,9 +170,10 @@ public class FtLevelEditor : EditorWindow
         gridObj.transform.position = new Vector3(-0.5f, -0.5f, 0);
         gridObj.AddComponent<Grid>();
 
-        for (int i = 0; i < ftDLevel.TileMaps.Length; i++)
+        //for (int i = 0; i < ftDLevel.TileMaps.Count; i++)
+        foreach (var tileMap in ftDLevel.TileMaps)
         {
-            var tileMap = ftDLevel.TileMaps[i];
+            //var tileMap = ftDLevel.TileMaps[i];
             GameObject tilemap = new GameObject(tileMap.Name);
             tilemap.transform.SetParent(gridObj.transform);
             tilemap.transform.localPosition = Vector3.zero;
@@ -182,24 +183,63 @@ public class FtLevelEditor : EditorWindow
             // render.sortingOrder = tilemapData[i].OrderInLayer;
             // render.sortingLayerName = SortingLayer.layers[tilemapData[i].SortingLayerIndex].name;
             //Map.SetTileMap(map, tilemapData[i]);
-            for (int j = 0; j < tileMap.Tiles.Length; j++)
+            //for (int j = 0; j < tileMap.Tiles.Length; j++)
+            foreach (var tile in tileMap.Tiles)
             {
-                var tile = tileMap.Tiles[j];
+                //var tile = tileMap.Tiles[j];
                 map.SetTile(tile.IPos, tileObjs[tile.Type]);
             }
         }
-    }
 
+        Debug.LogFormat("loadLevelByData ok");
+    }
 
     // 将关卡数据序列化保存到文件中.
     void saveLevelByData()
     {
-        FtDLevel ftDLevel = new FtDLevel();
+        if (levelSelectIdx < 0)
+        {
+            return;
+        }
+
         var grid = GameObject.Find("Grid");
-        //grid.transform
+        FtDLevel ftDLevel = new FtDLevel();
+
+        for (var tileMapIdx = 0; tileMapIdx < grid.transform.childCount; tileMapIdx++)
+        {
+            var child = grid.transform.GetChild(tileMapIdx);
+            var tilemap = child.GetComponent<Tilemap>();
+            var tileDMap = new FtDTileMap();
+            var area = tilemap.cellBounds;
+            var tileArray = tilemap.GetTilesBlock(area);
+
+            for (int i = area.xMin; i < area.xMax; i++)
+            {
+                for (int j = area.yMin; j < area.yMax; j++)
+                {
+                    var pos = new Vector3Int(i, j, 0);
+                    var ftTile = tilemap.GetTile<FtTile>(pos);
+                    if (ftTile == null)
+                    {
+                        continue;
+                    }
+
+                    var tileD = new FtDTile();
+                    tileD.IPos = pos;
+                    tileD.Type = (int)ftTile.mType;
+                    tileDMap.Tiles.Add(tileD);
+                }
+            }
+
+            ftDLevel.TileMaps.Add(tileDMap);
+        }
 
         string data = JsonUtility.ToJson(ftDLevel);
+        Debug.LogFormat("set level data {0}", levelSelectIdx);
+		//Debug.LogFormat("{0}", data);
         FtLevelData.SetLevelData(levelSelectIdx, data);
+        Debug.LogFormat("saveLevelByData ok {0}", levelSelectIdx);
+
     }
 
     #endregion

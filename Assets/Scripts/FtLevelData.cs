@@ -11,7 +11,7 @@ public class FtLevelData
         public FileInfo File;
     };
 
-	// 关卡数据路径
+    // 关卡数据路径
     private static string LevelDataDir = "Assets/LevelData";
     private static List<FtLevelItem> mLevelItems = new List<FtLevelItem>();
 
@@ -20,13 +20,20 @@ public class FtLevelData
     {
         LoadLevelListItem();
 
-        names = new string[mLevelItems.Count];
-        index = new int[mLevelItems.Count];
+        names = new string[mLevelItems.Count + 1];
+        index = new int[mLevelItems.Count + 1];
+
         for (int i = 0; i < mLevelItems.Count; i++)
         {
             names[i] = mLevelItems[i].Name.Replace(".json", "");
             index[i] = i;
         }
+    }
+
+
+    public static void SetDirty()
+    {
+        mInit = false;
     }
 
 
@@ -66,34 +73,41 @@ public class FtLevelData
     public static bool GetLevelData(int idx, ref string data)
     {
         var ret = false;
-        if (idx < 0 || idx > mLevelItems.Count)
+        if (idx < 0 || idx >= mLevelItems.Count)
         {
             return ret;
         }
 
         var levelItem = mLevelItems[idx];
-
-        using (var reader = new StreamReader(levelItem.File.OpenRead()))
+		var stream = levelItem.File.Open(FileMode.Open, FileAccess.Read);
+        using (var reader = new StreamReader(stream))
         {
             var fileContents = reader.ReadToEnd();
             data = fileContents;
+            ret = true;
         }
+
+		stream.Close();
+		levelItem.File.Refresh();
         return ret;
     }
 
-	public static bool SetLevelData(int idx, string data)
+    public static bool SetLevelData(int idx, string data)
     {
         var ret = false;
-        if (idx < 0 || idx > mLevelItems.Count)
+        if (idx < 0 || idx >= mLevelItems.Count)
         {
             return ret;
         }
 
         var levelItem = mLevelItems[idx];
-        using (var writer = new StreamWriter(levelItem.File.OpenWrite()))
+        var stream = levelItem.File.Open(FileMode.OpenOrCreate | FileMode.Truncate, FileAccess.ReadWrite);
+        using (var writer = new StreamWriter(stream))
         {
-			writer.Write(data);
+            writer.Write(data);
         }
+		stream.Close();
+        levelItem.File.Refresh();
         return ret;
     }
 

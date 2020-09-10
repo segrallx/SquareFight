@@ -9,7 +9,8 @@ public class FtTile : Tile
 		None,
 		Floor,
 		Hero,
-		Orc,
+		OrcArcher,
+		OrcSilly,
 		Rock,
 		Key,
 	};
