@@ -179,6 +179,7 @@ public class FtLevelEditor : EditorWindow
             tilemap.transform.localPosition = Vector3.zero;
             Tilemap map = tilemap.AddComponent<Tilemap>();
             TilemapRenderer render = tilemap.AddComponent<TilemapRenderer>();
+			render.sortingOrder = tileMap.SortingOrder;
             // render.sortOrder = (TilemapRenderer.SortOrder)tilemapData[i].SortOrderIndex;
             // render.sortingOrder = tilemapData[i].OrderInLayer;
             // render.sortingLayerName = SortingLayer.layers[tilemapData[i].SortingLayerIndex].name;
@@ -209,9 +210,13 @@ public class FtLevelEditor : EditorWindow
         {
             var child = grid.transform.GetChild(tileMapIdx);
             var tilemap = child.GetComponent<Tilemap>();
+			var tilemapRender = child.GetComponent<TilemapRenderer>();
             var tileDMap = new FtDTileMap();
             var area = tilemap.cellBounds;
             var tileArray = tilemap.GetTilesBlock(area);
+
+			tileDMap.Name = tilemap.name;
+			tileDMap.Bound = new FtDBound(area.xMin, area.xMax, area.yMin, area.yMax);
 
             for (int i = area.xMin; i < area.xMax; i++)
             {
@@ -225,9 +230,11 @@ public class FtLevelEditor : EditorWindow
                     }
 
                     var tileD = new FtDTile();
+					tileD.Name = ftTile.name;
                     tileD.IPos = pos;
                     tileD.Type = (int)ftTile.mType;
                     tileDMap.Tiles.Add(tileD);
+					tileDMap.SortingOrder = tilemapRender.sortingOrder;
                 }
             }
 
