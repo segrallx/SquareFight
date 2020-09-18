@@ -60,4 +60,9 @@ public class FtDLevel
     {
         TileMaps = new List<FtDTileMap>();
     }
+
+	public override string ToString()
+	{
+		return "FtDLevel";
+	}
 }

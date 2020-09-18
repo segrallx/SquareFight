@@ -92,6 +92,21 @@ public class FtLevelData
         return ret;
     }
 
+	public static void GetLevelData(string levelName, ref string data)
+    {
+		string path = LevelDataDir+"/"+ levelName+ ".json";
+		FileInfo fi = new FileInfo(path);
+
+		var stream = fi.Open(FileMode.Open, FileAccess.Read);
+        using (var reader = new StreamReader(stream))
+        {
+            var fileContents = reader.ReadToEnd();
+            data = fileContents;
+        }
+
+		stream.Close();
+	}
+
     public static bool SetLevelData(int idx, string data)
     {
         var ret = false;
