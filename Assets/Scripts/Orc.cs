@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Orc : MonoBehaviour
+public class Orc : Element
 {
-    public int mX=0;
-    public int mY=0;
     public bool mPosChange;
 
 	protected int mRound; //执行回合
@@ -16,16 +14,6 @@ public class Orc : MonoBehaviour
         Idle,
 		Move,
 		Attack,
-        // AtkUp,
-        // AtkDown,
-        // AtkLeft,
-        // AtkRight,
-    }
-
-    public void SetPos(int x, int y)
-    {
-        mX = x;
-        mY = y;
     }
 
     // Start is called before the first frame update
@@ -45,6 +33,11 @@ public class Orc : MonoBehaviour
         }
 
     }
+
+	public override Type ElementType()
+	{
+		return Element.Type.Orc;
+	}
 
 	public virtual void AIUpdate(){}
 }

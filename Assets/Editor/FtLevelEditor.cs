@@ -214,14 +214,33 @@ public class FtLevelEditor : EditorWindow
             var tileDMap = new FtDTileMap();
             var area = tilemap.cellBounds;
             var tileArray = tilemap.GetTilesBlock(area);
+			int xMin = 0;
+			int yMin = 0;
+
+			int xMax = 0;
+			int yMax = 0;
 
 			tileDMap.Name = tilemap.name;
-			tileDMap.Bound = new FtDBound(area.xMin, area.xMax, area.yMin, area.yMax);
+
 
             for (int i = area.xMin; i < area.xMax; i++)
             {
+				if(i < xMin) {
+					xMin = i;
+				}
+				if(i > xMax) {
+					xMax = i;
+				}
+
                 for (int j = area.yMin; j < area.yMax; j++)
                 {
+					if(j<yMin) {
+						yMin = j;
+					}
+					if(j>yMax) {
+						yMax = j;
+					}
+
                     var pos = new Vector3Int(i, j, 0);
                     var ftTile = tilemap.GetTile<FtTile>(pos);
                     if (ftTile == null)
@@ -238,6 +257,7 @@ public class FtLevelEditor : EditorWindow
                 }
             }
 
+			tileDMap.Bound = new FtDBound(xMin, xMax, yMin, yMax);
             ftDLevel.TileMaps.Add(tileDMap);
         }
 

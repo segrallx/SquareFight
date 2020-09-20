@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 
-public class Hero : MonoBehaviour
+
+public class Hero : Element
 {
-    public int mX;
-    public int mY;
 
     public int mNextX;
     public int mNextY;
 
-    // public static int mOldX;
-    // public static int mOldY;
     private int mHP; //玩家血量
 	private float mKeyHoldTime =0;
 	private KeyCode mKeyHold =0;
@@ -35,12 +32,17 @@ public class Hero : MonoBehaviour
         mNextY = mY;
     }
 
+	public override Type ElementType()
+	{
+		return Element.Type.Hero;
+	}
+
 
     // Start is called before the first frame update
     void Start()
     {
-        mX = 0;
-        mY = 0;
+        // mX = 0;
+        // mY = 0;
         mHP = 600;
         // UISan.Instance().SetHP(mHP);
     }
@@ -55,9 +57,9 @@ public class Hero : MonoBehaviour
         //Debug.LogFormat("new pos {0}:{1}", mX , mY);
 
         var instance = Floors.Instance();
-        if (instance.GetFloorState(mNextX, mNextY) == Floors.FloorState.None)
+        if (instance.GetElementType(mNextX, mNextY) == Element.Type.None)
         {
-            Floors.Instance().ChangeFloor(mX, mY, mNextX, mNextY, Floors.FloorState.Hero);
+            Floors.Instance().ChangeFloor(mX, mY, mNextX, mNextY, Element.Type.Hero);
             mX = mNextX;
             mY = mNextY;
             return true;
@@ -206,7 +208,7 @@ public class Hero : MonoBehaviour
     // 检查下一个位置是否可以被攻击
     bool checkCanAtkNext()
     {
-        if (Floors.Instance().GetFloorState(mNextX, mNextY) == Floors.FloorState.Orc)
+        if (Floors.Instance().GetElementType(mNextX, mNextY) == Element.Type.Orc)
         {
             return true;
         }
@@ -242,14 +244,14 @@ public class Hero : MonoBehaviour
         int dir = Direction.Dir(mX, mY, mNextX, mNextY);
         mSword.DoAttack(dir);
         resetNext();
-        //GameSan.Instance().AddRound();
+        GameSan.Instance().AddRound();
     }
 
     void doMove()
     {
         mSword.CancelAttack();
         ExploreCrossPos();
-        //GameSan.Instance().AddRound();
+        GameSan.Instance().AddRound();
     }
 
     // 探索周围

@@ -157,7 +157,7 @@ public class OrcArcher : Orc
             var mY2 = mY + dir[1];
 
             if (floor.CheckFloorValid(mX2, mY2) &&
-                floor.GetFloorState(mX2, mY2) == Floors.FloorState.None)
+                floor.GetElementType(mX2, mY2) == Element.Type.None)
             {
                 var pos1 = new Vector2Int(mX2, mY2);
                 var distanceTmp = Vector2Int.Distance(pos1, posHero);
@@ -172,7 +172,7 @@ public class OrcArcher : Orc
 
         if (match)
         {
-            Floors.Instance().ChangeFloor(mX, mY, posRet.x, posRet.y, Floors.FloorState.Orc);
+            Floors.Instance().ChangeFloor(mX, mY, posRet.x, posRet.y, Element.Type.Orc);
             Debug.LogFormat("do move from {0}:{1} to {2}:{3}", mX, mY, posRet.x, posRet.y);
             mX = posRet.x;
             mY = posRet.y;
