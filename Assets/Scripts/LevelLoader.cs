@@ -11,7 +11,7 @@ public class LevelLoader : MonoBehaviour
 
     private FtDLevel ftDLevel;
     private Dictionary<string, GameObject> tilePrefebDict;
-    private string tilePrefabPath = "Tiles";
+    private string tilePrefabPath = "Prefabs";
 
     private static LevelLoader __instance = null;
     public static LevelLoader Instance()
@@ -23,8 +23,14 @@ public class LevelLoader : MonoBehaviour
     {
         loadTilePrefebs();
         loadLevelData();
-		renderFloor();
-		renderElement();
+
+        var tileMap1 = ftDLevel.TileMaps[0];
+        doRender(FloorObj, tileMap1);
+        var floors = FloorObj.GetComponent<Floors>();
+        floors.Init(tileMap1.Bound);
+
+        var tileMap2 = ftDLevel.TileMaps[1];
+        doRender(ElementObj, tileMap2);
     }
 
     void Start()
@@ -56,43 +62,21 @@ public class LevelLoader : MonoBehaviour
         }
     }
 
-	void doRender(GameObject parent, FtDTileMap tileMap)
+
+    void doRender(GameObject parent, FtDTileMap tileMap)
     {
         foreach (var tile in tileMap.Tiles)
         {
             if (!tilePrefebDict.ContainsKey(tile.Name))
             {
-				Debug.LogErrorFormat("tile prefeb miss {0}", tile.Name);
+                Debug.LogErrorFormat("tile prefeb miss {0}", tile.Name);
                 continue;
             }
             var tilePrefab = tilePrefebDict[tile.Name];
             var pos = new Vector3(tile.IPos.x, tile.IPos.y);
             Instantiate(tilePrefab, pos, Quaternion.identity, parent.transform);
         }
-	}
-
-    void renderFloor()
-    {
-		var tileMap = ftDLevel.TileMaps[0];
-		doRender(FloorObj, tileMap);
-	}
-
-	void renderElement()
-	{
-		var tileMap = ftDLevel.TileMaps[1];
-		doRender(ElementObj, tileMap);
-	}
-
-
-    // 返回地板层.
-    public FtDTileMap GetFloor()
-    {
-        return new FtDTileMap();
     }
 
-    // 返回元素层.
-    public FtDTileMap GetElement()
-    {
-        return new FtDTileMap();
-    }
+
 }

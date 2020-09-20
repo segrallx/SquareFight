@@ -157,8 +157,7 @@ public class OrcArcher : Orc
             var mY2 = mY + dir[1];
 
             if (floor.CheckFloorValid(mX2, mY2) &&
-                floor.GetFloorState(mX2, mY2) == Floors.FloorState.None &&
-                floor.CheckFloorExplored(mX2, mY2))
+                floor.GetFloorState(mX2, mY2) == Floors.FloorState.None)
             {
                 var pos1 = new Vector2Int(mX2, mY2);
                 var distanceTmp = Vector2Int.Distance(pos1, posHero);

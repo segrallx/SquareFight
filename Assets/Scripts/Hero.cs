@@ -41,12 +41,8 @@ public class Hero : MonoBehaviour
     {
         mX = 0;
         mY = 0;
-
-        // mOldX = 0;
-        // mOldY = 0;
-
         mHP = 600;
-        UISan.Instance().SetHP(mHP);
+        // UISan.Instance().SetHP(mHP);
     }
 
     bool syncFloorState()
@@ -78,11 +74,12 @@ public class Hero : MonoBehaviour
     {
         mNextX = mX;
         mNextY = mY + 1;
+		var floors = Floors.Instance();
 
         //Debug.LogFormat("up pos {0}:{1}", mX , mY);
-        if (mNextY > Floors.YSizeMax)
+        if (mNextY > floors.YSizeMax)
         {
-            mNextY = Floors.YSizeMax;
+            mNextY = floors.YSizeMax;
         }
     }
 
@@ -90,10 +87,11 @@ public class Hero : MonoBehaviour
     {
         mNextX = mX;
         mNextY = mY - 1;
+		var floors = Floors.Instance();
 
-        if (mNextY < Floors.YSizeMin)
+        if (mNextY < floors.YSizeMin)
         {
-            mNextY = Floors.YSizeMin;
+            mNextY = floors.YSizeMin;
         }
     }
 
@@ -101,10 +99,11 @@ public class Hero : MonoBehaviour
     {
 		mNextX = mX - 1;
         mNextY = mY;
+		var floors = Floors.Instance();
 
-        if (mNextX < Floors.XSizeMin)
+        if (mNextX < floors.XSizeMin)
         {
-            mNextX = Floors.XSizeMin;
+            mNextX = floors.XSizeMin;
         }
     }
 
@@ -113,12 +112,12 @@ public class Hero : MonoBehaviour
 
 		mNextX = mX + 1;
         mNextY = mY;
+		var floors = Floors.Instance();
 
-        if (mNextX > Floors.XSizeMax)
+        if (mNextX > floors.XSizeMax)
         {
-            mNextX = Floors.XSizeMax;
+            mNextX = floors.XSizeMax;
         }
-
     }
 
 	void inputAction(KeyCode key)
@@ -185,7 +184,6 @@ public class Hero : MonoBehaviour
 			mKeyHold=KeyCode.D;
         }
 
-
 		if(mKeyHoldTime>0.2 && Input.GetKey(mKeyHold) ) {
 			mKeyHoldTime=0;
 			inputAction(mKeyHold);
@@ -231,10 +229,10 @@ public class Hero : MonoBehaviour
     public void BeAttacked()
     {
         mHP -= 1;
-        UISan.Instance().SetHP(mHP);
+        // UISan.Instance().SetHP(mHP);
         if (mHP <= 0)
         {
-            UISan.Instance().ShowDead();
+            // UISan.Instance().ShowDead();
         }
     }
 
@@ -244,25 +242,20 @@ public class Hero : MonoBehaviour
         int dir = Direction.Dir(mX, mY, mNextX, mNextY);
         mSword.DoAttack(dir);
         resetNext();
-        GameSan.Instance().AddRound();
+        //GameSan.Instance().AddRound();
     }
 
     void doMove()
     {
         mSword.CancelAttack();
         ExploreCrossPos();
-        GameSan.Instance().AddRound();
+        //GameSan.Instance().AddRound();
     }
 
     // 探索周围
     public void ExploreCrossPos()
     {
         var floors = Floors.Instance();
-        floors.SetFloorExplored(mX - 1, mY);
-        floors.SetFloorExplored(mX + 1, mY);
-
-        floors.SetFloorExplored(mX, mY - 1);
-        floors.SetFloorExplored(mX, mY + 1);
     }
 
 
@@ -270,9 +263,6 @@ public class Hero : MonoBehaviour
     {
         OnAttack = false;
     }
-
-
-
 
 
 }
