@@ -5,7 +5,7 @@ using UnityEngine;
 public class LevelLoader : MonoBehaviour
 {
     // Start is called before the first frame update
-    public string LevelName;
+    private string levelName;
     public GameObject FloorObj;
     public GameObject ElementObj;
 
@@ -44,9 +44,10 @@ public class LevelLoader : MonoBehaviour
     void loadLevelData()
     {
         string data = "";
-        FtLevelData.GetLevelData(LevelName, ref data);
+        levelName = string.Format("level_01_00{0}", Random.Range(1, 4));
+        FtLevelData.GetLevelData(levelName, ref data);
         ftDLevel = JsonUtility.FromJson<FtDLevel>(data);
-        Debug.LogFormat("load level {0}", LevelName);
+        Debug.LogFormat("load level {0}", levelName);
     }
 
     void loadTilePrefebs()
@@ -62,10 +63,10 @@ public class LevelLoader : MonoBehaviour
 
     delegate void elementCallback(Vector3Int pos, GameObject s);
 
-	// 熏染地板
-	void doRenderFloor(FtDTileMap tileMap)
+    // 熏染地板
+    void doRenderFloor(FtDTileMap tileMap)
     {
-		var floors = FloorObj.GetComponent<Floors>();
+        var floors = FloorObj.GetComponent<Floors>();
         floors.Init(tileMap.Bound);
 
         foreach (var tile in tileMap.Tiles)
@@ -81,10 +82,10 @@ public class LevelLoader : MonoBehaviour
         }
     }
 
-	// 渲染地图元素
+    // 渲染地图元素
     void doRenderElement(FtDTileMap tileMap)
     {
-		var floors = FloorObj.GetComponent<Floors>();
+        var floors = FloorObj.GetComponent<Floors>();
         foreach (var tile in tileMap.Tiles)
         {
             if (!tilePrefebDict.ContainsKey(tile.Name))
@@ -97,7 +98,7 @@ public class LevelLoader : MonoBehaviour
             var obj = Instantiate(tilePrefab, pos, Quaternion.identity, ElementObj.transform);
             var ele = obj.GetComponent<Element>();
             ele.SetPos(tile.IPos.x, tile.IPos.y);
-			floors.SetElementType(tile.IPos.x, tile.IPos.y, ele.ElementType());
+            floors.SetElementType(tile.IPos.x, tile.IPos.y, ele.ElementType());
         }
     }
 

@@ -2,6 +2,8 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
+using System.IO;
 
 public class FtLevelEditor : EditorWindow
 {
@@ -12,7 +14,8 @@ public class FtLevelEditor : EditorWindow
     // 当前操作的关卡数据
     //private FtDLevel ftDLevel;
     // 瓦片对象
-    public Tile[] tileObjs;
+    public Dictionary<string, Tile> tileObjs;
+    private static string tileDataDir = "Assets/LevelTiled";
 
     #region ShowTileMapEditor
 
@@ -120,20 +123,17 @@ public class FtLevelEditor : EditorWindow
 
     void loadTileFromAssert()
     {
-        string[] list = {
-            "FtNone.asset",
-            "FtFloor.asset",
-            "FtHero.asset",
-            "FtOrcArcher.asset",
-            "FtOrcSilly.asset",
-            "FtRock.asset",
-        };
-
-        tileObjs = new Tile[list.Length];
-        for (int i = 0; i < list.Length; i++)
+        tileObjs = new Dictionary<string, Tile>();
+        DirectoryInfo theFolder = new DirectoryInfo(tileDataDir);
+        foreach (var fileInfo in theFolder.GetFiles())
         {
-            tileObjs[i] = UnityEditor.AssetDatabase.
-                LoadAssetAtPath<Tile>("Assets/LevelTiled/" + list[i]);
+            if (!fileInfo.Name.EndsWith(".asset"))
+            {
+                continue;
+            }
+
+            var key = fileInfo.Name.Replace(".asset", "");
+            tileObjs[key] = UnityEditor.AssetDatabase.LoadAssetAtPath<Tile>("Assets/LevelTiled/" + fileInfo.Name);
         }
     }
 
@@ -167,7 +167,7 @@ public class FtLevelEditor : EditorWindow
         }
 
         var gridObj = new GameObject("Grid");
-        gridObj.transform.position = new Vector3(-0.5f, -0.5f, 0);
+        gridObj.transform.position = new Vector3(0, 0, 0);
         gridObj.AddComponent<Grid>();
 
         //for (int i = 0; i < ftDLevel.TileMaps.Count; i++)
@@ -188,7 +188,11 @@ public class FtLevelEditor : EditorWindow
             foreach (var tile in tileMap.Tiles)
             {
                 //var tile = tileMap.Tiles[j];
-                map.SetTile(tile.IPos, tileObjs[tile.Type]);
+                if (!tileObjs.ContainsKey(tile.Name))
+                {
+                    Debug.LogErrorFormat("tile miss {0}", tile.Name);
+                }
+                map.SetTile(tile.IPos, tileObjs[tile.Name]);
             }
         }
 
@@ -234,17 +238,17 @@ public class FtLevelEditor : EditorWindow
                         continue;
                     }
 
-					if (i < xMin)
-					{
-						xMin = i;
-					}
-					if (i > xMax)
-					{
-						xMax = i;
-					}
+                    if (i < xMin)
+                    {
+                        xMin = i;
+                    }
+                    if (i > xMax)
+                    {
+                        xMax = i;
+                    }
 
 
-					if (j < yMin)
+                    if (j < yMin)
                     {
                         yMin = j;
                     }
@@ -256,7 +260,6 @@ public class FtLevelEditor : EditorWindow
                     var tileD = new FtDTile();
                     tileD.Name = ftTile.name;
                     tileD.IPos = pos;
-                    tileD.Type = (int)ftTile.mType;
                     tileDMap.Tiles.Add(tileD);
                     tileDMap.SortingOrder = tilemapRender.sortingOrder;
                 }
