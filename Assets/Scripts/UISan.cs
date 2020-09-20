@@ -30,35 +30,9 @@ public class UISan : MonoBehaviour
     {
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        // if (mIsDead)
-        // {
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                Restart();
-            }
-        // }
-
-		if (mIsWin)
-        {
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                Next();
-            }
-        }
-
-    }
-
     public void SetHP(int val)
     {
         mHpVal.GetComponent<UnityEngine.UI.Text>().text = string.Format("HP:{0}", val);
-    }
-
-    public void Restart()
-    {
-        SceneManager.LoadScene(0);
     }
 
 

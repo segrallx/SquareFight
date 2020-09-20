@@ -66,9 +66,9 @@ public class FtLevelEditor : EditorWindow
         // }
     }
 
-	void refreshLevelList()
-	{
-	}
+    void refreshLevelList()
+    {
+    }
 
     void guiLevelPopUp()
     {
@@ -94,23 +94,23 @@ public class FtLevelEditor : EditorWindow
             loadLevelByData();
         }
 
-		GUILayout.EndVertical();
+        GUILayout.EndVertical();
 
-		GUILayout.BeginHorizontal();
+        GUILayout.BeginHorizontal();
 
         if (GUILayout.Button("Save", GUILayout.Width(80)))
         {
             saveLevelByData();
         }
 
-		if (GUILayout.Button("Refresh", GUILayout.Width(80)))
+        if (GUILayout.Button("Refresh", GUILayout.Width(80)))
         {
-			FtLevelData.SetDirty();
-			loadTileFromAssert();
-			loadLevelByData();
+            FtLevelData.SetDirty();
+            loadTileFromAssert();
+            loadLevelByData();
         }
 
-		GUILayout.EndHorizontal();
+        GUILayout.EndHorizontal();
     }
 
     // void clearCurrentLevel()
@@ -179,7 +179,7 @@ public class FtLevelEditor : EditorWindow
             tilemap.transform.localPosition = Vector3.zero;
             Tilemap map = tilemap.AddComponent<Tilemap>();
             TilemapRenderer render = tilemap.AddComponent<TilemapRenderer>();
-			render.sortingOrder = tileMap.SortingOrder;
+            render.sortingOrder = tileMap.SortingOrder;
             // render.sortOrder = (TilemapRenderer.SortOrder)tilemapData[i].SortOrderIndex;
             // render.sortingOrder = tilemapData[i].OrderInLayer;
             // render.sortingLayerName = SortingLayer.layers[tilemapData[i].SortingLayerIndex].name;
@@ -210,37 +210,23 @@ public class FtLevelEditor : EditorWindow
         {
             var child = grid.transform.GetChild(tileMapIdx);
             var tilemap = child.GetComponent<Tilemap>();
-			var tilemapRender = child.GetComponent<TilemapRenderer>();
+            var tilemapRender = child.GetComponent<TilemapRenderer>();
             var tileDMap = new FtDTileMap();
             var area = tilemap.cellBounds;
             var tileArray = tilemap.GetTilesBlock(area);
-			int xMin = 0;
-			int yMin = 0;
 
-			int xMax = 0;
-			int yMax = 0;
+            int xMin = 0;
+            int yMin = 0;
+            int xMax = 0;
+            int yMax = 0;
 
-			tileDMap.Name = tilemap.name;
-
+            tileDMap.Name = tilemap.name;
 
             for (int i = area.xMin; i < area.xMax; i++)
             {
-				if(i < xMin) {
-					xMin = i;
-				}
-				if(i > xMax) {
-					xMax = i;
-				}
 
                 for (int j = area.yMin; j < area.yMax; j++)
                 {
-					if(j<yMin) {
-						yMin = j;
-					}
-					if(j>yMax) {
-						yMax = j;
-					}
-
                     var pos = new Vector3Int(i, j, 0);
                     var ftTile = tilemap.GetTile<FtTile>(pos);
                     if (ftTile == null)
@@ -248,22 +234,42 @@ public class FtLevelEditor : EditorWindow
                         continue;
                     }
 
+					if (i < xMin)
+					{
+						xMin = i;
+					}
+					if (i > xMax)
+					{
+						xMax = i;
+					}
+
+
+					if (j < yMin)
+                    {
+                        yMin = j;
+                    }
+                    if (j > yMax)
+                    {
+                        yMax = j;
+                    }
+
                     var tileD = new FtDTile();
-					tileD.Name = ftTile.name;
+                    tileD.Name = ftTile.name;
                     tileD.IPos = pos;
                     tileD.Type = (int)ftTile.mType;
                     tileDMap.Tiles.Add(tileD);
-					tileDMap.SortingOrder = tilemapRender.sortingOrder;
+                    tileDMap.SortingOrder = tilemapRender.sortingOrder;
                 }
             }
 
-			tileDMap.Bound = new FtDBound(xMin, xMax, yMin, yMax);
+            Debug.LogFormat("set bound xMin {0} xMax {1} yMin {2} yMax {3}", xMin, xMax, yMin, yMax);
+            tileDMap.Bound = new FtDBound(xMin, xMax, yMin, yMax);
             ftDLevel.TileMaps.Add(tileDMap);
         }
 
         string data = JsonUtility.ToJson(ftDLevel);
         Debug.LogFormat("set level data {0}", levelSelectIdx);
-		//Debug.LogFormat("{0}", data);
+        //Debug.LogFormat("{0}", data);
         FtLevelData.SetLevelData(levelSelectIdx, data);
         Debug.LogFormat("saveLevelByData ok {0}", levelSelectIdx);
 

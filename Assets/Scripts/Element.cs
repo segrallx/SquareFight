@@ -18,6 +18,7 @@ public abstract class Element : MonoBehaviour
         Hero = 1,
         Orc = 2,
 		Rock = 3,
+		Gate = 4,
 	}
 
 	public abstract Type ElementType();

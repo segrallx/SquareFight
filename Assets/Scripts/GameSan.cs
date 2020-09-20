@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameSan : MonoBehaviour
 {
@@ -27,7 +28,16 @@ public class GameSan : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // if (mIsDead)
+        // {
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+			Restart();
+		}
+        // }
+
     }
+
 
     public void AddRound()
     {
@@ -38,6 +48,13 @@ public class GameSan : MonoBehaviour
     {
         return mRound;
     }
+
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(0);
+    }
+
 
 
 }
