@@ -44,7 +44,7 @@ public class LevelLoader : MonoBehaviour
     void loadLevelData()
     {
         string data = "";
-        levelName = string.Format("level_01_00{0}", Random.Range(1, 4));
+        levelName = string.Format("level_01_00{0}", Random.Range(1, 9));
         FtLevelData.GetLevelData(levelName, ref data);
         ftDLevel = JsonUtility.FromJson<FtDLevel>(data);
         Debug.LogFormat("load level {0}", levelName);
