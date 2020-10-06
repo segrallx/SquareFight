@@ -24,10 +24,14 @@ public class Floor : MonoBehaviour
     public void SetUsed()
     {
         mResUsed.SetActive(true);
+        Debug.LogFormat("this");
     }
 
     public void SetNull()
     {
+
+
+
         mResUsed.SetActive(false);
     }
 

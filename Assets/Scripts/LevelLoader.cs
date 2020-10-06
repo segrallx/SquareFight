@@ -97,7 +97,7 @@ public class LevelLoader : MonoBehaviour
             var pos = new Vector3(tile.IPos.x, tile.IPos.y);
             var obj = Instantiate(tilePrefab, pos, Quaternion.identity, ElementObj.transform);
             var ele = obj.GetComponent<Element>();
-            ele.SetPos(tile.IPos.x, tile.IPos.y);
+            ele.Init(tile.IPos.x, tile.IPos.y);
             floors.SetElementType(tile.IPos.x, tile.IPos.y, ele.ElementType());
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class GameSan : MonoBehaviour
 {
 
-    int mRound=0; // 回合数
+    int mRound = 0; // 回合数
 
     private static GameSan __instance = null;
     public static GameSan Instance()
@@ -30,21 +30,22 @@ public class GameSan : MonoBehaviour
     {
         // if (mIsDead)
         // {
-		if (Input.GetKeyDown(KeyCode.R))
-		{
-			Restart();
-		}
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Restart();
+        }
         // }
 
     }
 
 
-    public void AddRound()
+    public void AddRound(int i)
     {
-        mRound += 1;
+        Debug.LogFormat("add round {0}", i);
+        mRound += i;
     }
 
-	public int Round()
+    public int Round()
     {
         return mRound;
     }
@@ -52,6 +53,7 @@ public class GameSan : MonoBehaviour
 
     public void Restart()
     {
+        mRound = 0;
         SceneManager.LoadScene(0);
     }
 

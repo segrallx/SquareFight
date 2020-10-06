@@ -43,8 +43,8 @@ public class Hero : Element
     {
         // mX = 0;
         // mY = 0;
-        mHP = 600;
-        // UISan.Instance().SetHP(mHP);
+        mHP = 60;
+		UISan.Instance().SetHP(mHP);
     }
 
     bool syncFloorState()
@@ -54,12 +54,13 @@ public class Hero : Element
             return false;
         }
 
-        //Debug.LogFormat("new pos {0}:{1}", mX , mY);
+        Debug.LogFormat("new pos {0}:{1}", mX , mY);
 
         var instance = Floors.Instance();
         if (instance.GetElementType(mNextX, mNextY) == Element.Type.None)
         {
             Floors.Instance().ChangeFloor(mX, mY, mNextX, mNextY, Element.Type.Hero);
+			Debug.LogFormat("hero change {0}:{1}  to {2}:{3}", mX , mY, mNextX, mNextY);
             mX = mNextX;
             mY = mNextY;
             return true;
@@ -231,10 +232,10 @@ public class Hero : Element
     public void BeAttacked()
     {
         mHP -= 1;
-        // UISan.Instance().SetHP(mHP);
+		UISan.Instance().SetHP(mHP);
         if (mHP <= 0)
         {
-            // UISan.Instance().ShowDead();
+			UISan.Instance().ShowDead();
         }
     }
 
@@ -244,14 +245,14 @@ public class Hero : Element
         int dir = Direction.Dir(mX, mY, mNextX, mNextY);
         mSword.DoAttack(dir);
         resetNext();
-        GameSan.Instance().AddRound();
+        GameSan.Instance().AddRound(1);
     }
 
     void doMove()
     {
         mSword.CancelAttack();
         ExploreCrossPos();
-        GameSan.Instance().AddRound();
+        GameSan.Instance().AddRound(1);
     }
 
     // 探索周围
@@ -260,11 +261,17 @@ public class Hero : Element
         var floors = Floors.Instance();
     }
 
-
     public void afterAttack()
     {
         OnAttack = false;
     }
+
+	public override void Init(int x, int y)
+	{
+		base.Init(x,  y);
+		mNextX = x;
+		mNextY = y;
+	}
 
 
 }

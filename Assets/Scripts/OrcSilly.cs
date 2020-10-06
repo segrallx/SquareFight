@@ -86,9 +86,10 @@ public class OrcSilly : Orc
 
     bool hasAttackRound()
     {
-        //Debug.LogFormat("round {0} round to {1}", mRound, GameSan.Instance().Round());
+
         if (mAttackRound != GameSan.Instance().Round())
         {
+			//Debug.LogFormat("round {0} round to {1}", mRound, GameSan.Instance().Round());
             return true;
         }
         return false;

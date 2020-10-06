@@ -61,7 +61,7 @@ public class OrcArcher : Orc
 
     void animationOver(string name)
     {
-        Debug.LogFormat("animation over {0}", name);
+        //Debug.LogFormat("animation over {0}", name);
         tryAction();
     }
 
